@@ -22,6 +22,27 @@ def initialize():
     df_output = df_output.drop(["Node_Type", "Subnet_ID", "List_Type"], axis=1)
     df_output.insert(0, "Epoch", 0)
 
+    list_types = ["B", "G", "W"]
+    blacklist = list()
+    greylist = list()
+    whitelist = list()
+
+    for element in list_types:
+        df_tmp = df_init.loc[df_init["List_Type"] == element]
+        df_tmp = df_tmp["Node_ID"]
+        nodes = df_tmp.tolist()
+        if element == "B":
+            blacklist.extend(nodes)
+        elif element == "G":
+            greylist.extend(nodes)
+        elif element == "W":
+            whitelist.extend(nodes)
+        else:
+            raise ValueError
+
+    print(blacklist)
+    print(greylist)
+    print(whitelist)
     return df_init, df_output, subnets
 
 
