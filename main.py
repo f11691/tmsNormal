@@ -24,7 +24,7 @@ def initialize():
 
     list_types = ["B", "G", "W"]
     blacklist = list()
-    greylist = list()
+    graylist = list()
     whitelist = list()
 
     for element in list_types:
@@ -34,21 +34,20 @@ def initialize():
         if element == "B":
             blacklist.extend(nodes)
         elif element == "G":
-            greylist.extend(nodes)
+            graylist.extend(nodes)
         elif element == "W":
             whitelist.extend(nodes)
         else:
             raise ValueError
 
-    print(blacklist)
-    print(greylist)
-    print(whitelist)
-    return df_init, df_output, subnets
+    return df_init, df_output, subnets, blacklist, graylist, whitelist
 
 
 if __name__ == "__main__":
-    df_init, df_output, subnets = initialize()
+    df_init, df_output, subnets, blacklist, graylist, whitelist = initialize()
     print(df_init)
     print(df_output)
     print(subnets)
-
+    print(blacklist)
+    print(graylist)
+    print(whitelist)
