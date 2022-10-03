@@ -1,8 +1,8 @@
 """ devices voting"""
 import random
 
-import pandas as pd
 import numpy as np
+
 
 class Voter:  # nodes as voters
 
@@ -14,8 +14,8 @@ class Voter:  # nodes as voters
         print(trustvalue_dict)
         print(self.neighbours)
 
-        vote = np.zeros((len(self.neighbours)+1, len(self.neighbours)+1))
-        for i in range(len(self.neighbours)+1):
+        vote = np.zeros((len(self.neighbours) + 1, len(self.neighbours) + 1))
+        for i in range(len(self.neighbours) + 1):
             if i == 0:
                 vote[0, i] = 0
             else:
@@ -32,7 +32,6 @@ class Voter:  # nodes as voters
                     vote[x, y] = v
 
         return vote
-
 
 
 """
