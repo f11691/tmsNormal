@@ -1,7 +1,7 @@
 import pandas as pd
 
 import malicious
-
+import voting
 
 def initialize():
     """
@@ -42,19 +42,37 @@ def initialize():
         else:
             raise ValueError
 
-    return df_init, df_output, subnets, blacklist, graylist, whitelist
+    trustvalue_dict = dict()
+
+    for index, row in df_output.iterrows():
+        trustvalue_dict[row["Node_ID"]] = row["Trust_Value"]
+
+    return df_init, df_output, subnets, blacklist, graylist, whitelist, trustvalue_dict
 
 
 if __name__ == "__main__":
-    df_init, df_output, subnets, blacklist, graylist, whitelist = initialize()
+    df_init, df_output, subnets, blacklist, graylist, whitelist, trustvalue_dict = initialize()
+    """
     print(df_init)
     print(df_output)
     print(subnets)
     print(blacklist)
     print(graylist)
     print(whitelist)
+    print(trustvalue_dict)
+    """
     print(20 * "#")
 
     m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
     m1.run_all()
-    print(m1.m)
+
+    v1 = voting.Voter(subnets[1])
+    vote = v1.voting(trustvalue_dict)
+    print(vote)
+    print("#####################")
+    v2 = voting.Voter(subnets[2])
+    v2.voting(trustvalue_dict)
+    v3 = voting.Voter(subnets[3])
+    v3.voting(trustvalue_dict)
+    v4 = voting.Voter(subnets[4])
+    v4.voting(trustvalue_dict)
