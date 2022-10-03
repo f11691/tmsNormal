@@ -1,5 +1,7 @@
 import pandas as pd
 
+import malicious
+
 
 def initialize():
     """
@@ -51,3 +53,8 @@ if __name__ == "__main__":
     print(blacklist)
     print(graylist)
     print(whitelist)
+    print(20 * "#")
+
+    m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
+    m1.run_all()
+    print(m1.m)
