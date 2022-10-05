@@ -76,3 +76,6 @@ if __name__ == "__main__":
     v3.voting(trustvalue_dict)
     v4 = voting.Voter(subnets[4])
     v4.voting(trustvalue_dict)
+
+
+        # add class score. gettin output of vote from each subnet and calculate trust score!
