@@ -3,8 +3,6 @@
 import random  # for import Random choices() Methode
 
 
-# from node import *
-
 
 class Malicious:  # for calculate malicious nodes between 3 groups
 
