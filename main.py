@@ -79,3 +79,4 @@ if __name__ == "__main__":
 
 
         # add class score. gettin output of vote from each subnet and calculate trust score!
+        # it is needed to ignore first elemt of trust score dict
