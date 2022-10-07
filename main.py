@@ -2,6 +2,7 @@ import pandas as pd
 
 import malicious
 import score
+import tms
 import voting
 
 
@@ -58,6 +59,8 @@ if __name__ == "__main__":
     print(df_output)
     tms_last_X_required_epochs = 5
 
+    know_nodes = df_init["Node_ID"].unique()
+
     current_epoch = 0
     """
     print(df_init)
@@ -107,6 +110,9 @@ if __name__ == "__main__":
 
     df_last_X_epochs = df_output.loc[df_output["Epoch"].isin(last_X_epochs_numbers)]
     print(df_last_X_epochs)
+    print(m1.m)
+
+    trustscore = s1score | s2score | s3score | s4score
+    tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_last_X_epochs, trustscore)
 
     # call tms with: malicious_ids, tms_last_X_required_epochs, last_X_epochs, s1score, s2score, s3score, s4score
-
