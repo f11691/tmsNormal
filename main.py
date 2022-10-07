@@ -73,48 +73,47 @@ if __name__ == "__main__":
     """
     print(20 * "#")
 
-    m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
-    m1.run_all()
+    for i in range(current_epoch, 10):
+        current_epoch += 1
+        m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
+        m1.run_all()
 
-    # Subnet 1
-    v1 = voting.Voter(subnets[1])
-    v1vote = v1.voting(trustvalue_dict)
-    s1 = score.Score(v1vote, subnets[1])
-    s1score = s1.scorearray()
+        # Subnet 1
+        v1 = voting.Voter(subnets[1])
+        v1vote = v1.voting(trustvalue_dict)
+        s1 = score.Score(v1vote, subnets[1])
+        s1score = s1.scorearray()
 
-    # Subnet 2
-    v2 = voting.Voter(subnets[2])
-    v2vote = v2.voting(trustvalue_dict)
-    s2 = score.Score(v2vote, subnets[2])
-    s2score = s2.scorearray()
+        # Subnet 2
+        v2 = voting.Voter(subnets[2])
+        v2vote = v2.voting(trustvalue_dict)
+        s2 = score.Score(v2vote, subnets[2])
+        s2score = s2.scorearray()
 
-    # Subnet 3
-    v3 = voting.Voter(subnets[3])
-    v3vote = v3.voting(trustvalue_dict)
-    s3 = score.Score(v3vote, subnets[3])
-    s3score = s3.scorearray()
+        # Subnet 3
+        v3 = voting.Voter(subnets[3])
+        v3vote = v3.voting(trustvalue_dict)
+        s3 = score.Score(v3vote, subnets[3])
+        s3score = s3.scorearray()
 
-    # Subnet 4
-    v4 = voting.Voter(subnets[4])
-    v4vote = v4.voting(trustvalue_dict)
-    s4 = score.Score(v4vote, subnets[4])
-    s4score = s4.scorearray()
+        # Subnet 4
+        v4 = voting.Voter(subnets[4])
+        v4vote = v4.voting(trustvalue_dict)
+        s4 = score.Score(v4vote, subnets[4])
+        s4score = s4.scorearray()
 
-    # extract last 5 epochs from df_output
-    num_epochs = df_output["Epoch"].unique().tolist()
-    num_epochs = pd.Series(num_epochs)
-    last_X_epochsindexes = num_epochs.nlargest(tms_last_X_required_epochs)
-    last_X_epochs_numbers = last_X_epochsindexes.index.values.tolist()
-    print(last_X_epochs_numbers)
-    print(tms_last_X_required_epochs)
+        # extract last 5 epochs from df_output
+        num_epochs = df_output["Epoch"].unique().tolist()
+        num_epochs = pd.Series(num_epochs)
+        last_X_epochsindexes = num_epochs.nlargest(tms_last_X_required_epochs)
+        last_X_epochs_numbers = last_X_epochsindexes.index.values.tolist()
 
-    df_last_X_epochs = df_output.loc[df_output["Epoch"].isin(last_X_epochs_numbers)]
-    print(df_last_X_epochs)
-    print(m1.m)
+        df_last_X_epochs = df_output.loc[df_output["Epoch"].isin(last_X_epochs_numbers)]
 
-    trustscore = s1score | s2score | s3score | s4score
-    trustscore = dict(sorted(trustscore.items()))
-    print(trustscore)
-    tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_last_X_epochs, trustscore)
+        trustscore = s1score | s2score | s3score | s4score
+        trustscore = dict(sorted(trustscore.items()))
+        tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_last_X_epochs, trustscore)
 
-    # call tms with: malicious_ids, tms_last_X_required_epochs, last_X_epochs, s1score, s2score, s3score, s4score
+        for node in know_nodes:
+            df_insert = pd.DataFrame({"Epoch": current_epoch, "Node_ID": node, "List_Type": ""})
+            df_output = pd.concat([df_output, df_insert])
