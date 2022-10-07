@@ -2,6 +2,7 @@ import pandas as pd
 
 import malicious
 import voting
+import score
 
 def initialize():
     """
@@ -68,7 +69,10 @@ if __name__ == "__main__":
 
     v1 = voting.Voter(subnets[1])
     vote = v1.voting(trustvalue_dict)
-    print(vote)
+    # print(vote)
+    print("#####################")
+    s1 = score.Score(vote, subnets[1])
+    print(s1.scorearray())
     print("#####################")
     v2 = voting.Voter(subnets[2])
     v2.voting(trustvalue_dict)
@@ -76,7 +80,5 @@ if __name__ == "__main__":
     v3.voting(trustvalue_dict)
     v4 = voting.Voter(subnets[4])
     v4.voting(trustvalue_dict)
-
-
         # add class score. gettin output of vote from each subnet and calculate trust score!
         # it is needed to ignore first elemt of trust score dict
