@@ -18,6 +18,9 @@ def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_ep
                 trustvaluedict[node] = trustvalue
 
         return trustvaluedict
+    else:
+        for node in know_nodes:
+            print(last_X_epochs.loc[last_X_epochs["Node_ID"] == node]["Trust_Value"])
 
     """
     for i in nodenumber:
