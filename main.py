@@ -23,7 +23,8 @@ def initialize():
         subnets[names] = subnet_nodes
 
     df_output = df_init
-    df_output = df_output.drop(["Node_Type", "Subnet_ID", "List_Type"], axis=1)
+    # df_output = df_output.drop(["Node_Type", "Subnet_ID", "List_Type"], axis=1)
+    df_output = df_output.drop(["Node_Type", "Subnet_ID"], axis=1)
     df_output.insert(0, "Epoch", 0)
 
     list_types = ["B", "G", "W"]
@@ -54,6 +55,10 @@ def initialize():
 
 if __name__ == "__main__":
     df_init, df_output, subnets, blacklist, graylist, whitelist, trustvalue_dict = initialize()
+    print(df_output)
+    tms_last_X_required_epochs = 5
+
+    current_epoch = 0
     """
     print(df_init)
     print(df_output)
@@ -92,5 +97,16 @@ if __name__ == "__main__":
     s4 = score.Score(v4vote, subnets[4])
     s4score = s4.scorearray()
 
-    # add class score. gettin output of vote from each subnet and calculate trust score!
-    # it is needed to ignore first elemt of trust score dict
+    # extract last 5 epochs from df_output
+    num_epochs = df_output["Epoch"].unique().tolist()
+    num_epochs = pd.Series(num_epochs)
+    last_X_epochsindexes = num_epochs.nlargest(tms_last_X_required_epochs)
+    last_X_epochs_numbers = last_X_epochsindexes.index.values.tolist()
+    print(last_X_epochs_numbers)
+    print(tms_last_X_required_epochs)
+
+    df_last_X_epochs = df_output.loc[df_output["Epoch"].isin(last_X_epochs_numbers)]
+    print(df_last_X_epochs)
+
+    # call tms with: malicious_ids, tms_last_X_required_epochs, last_X_epochs, s1score, s2score, s3score, s4score
+

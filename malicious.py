@@ -3,7 +3,6 @@
 import random  # for import Random choices() Methode
 
 
-
 class Malicious:  # for calculate malicious nodes between 3 groups
 
     def __init__(self, n, x, xw, xb, xg, listw, listb, listg):
