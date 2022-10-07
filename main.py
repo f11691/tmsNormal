@@ -1,8 +1,9 @@
 import pandas as pd
 
 import malicious
-import voting
 import score
+import voting
+
 
 def initialize():
     """
@@ -67,18 +68,29 @@ if __name__ == "__main__":
     m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
     m1.run_all()
 
+    # Subnet 1
     v1 = voting.Voter(subnets[1])
-    vote = v1.voting(trustvalue_dict)
-    # print(vote)
-    print("#####################")
-    s1 = score.Score(vote, subnets[1])
-    print(s1.scorearray())
-    print("#####################")
+    v1vote = v1.voting(trustvalue_dict)
+    s1 = score.Score(v1vote, subnets[1])
+    s1score = s1.scorearray()
+
+    # Subnet 2
     v2 = voting.Voter(subnets[2])
-    v2.voting(trustvalue_dict)
+    v2vote = v2.voting(trustvalue_dict)
+    s2 = score.Score(v2vote, subnets[2])
+    s2score = s2.scorearray()
+
+    # Subnet 3
     v3 = voting.Voter(subnets[3])
-    v3.voting(trustvalue_dict)
+    v3vote = v3.voting(trustvalue_dict)
+    s3 = score.Score(v3vote, subnets[3])
+    s3score = s3.scorearray()
+
+    # Subnet 4
     v4 = voting.Voter(subnets[4])
-    v4.voting(trustvalue_dict)
-        # add class score. gettin output of vote from each subnet and calculate trust score!
-        # it is needed to ignore first elemt of trust score dict
+    v4vote = v4.voting(trustvalue_dict)
+    s4 = score.Score(v4vote, subnets[4])
+    s4score = s4.scorearray()
+
+    # add class score. gettin output of vote from each subnet and calculate trust score!
+    # it is needed to ignore first elemt of trust score dict
