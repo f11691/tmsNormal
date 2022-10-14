@@ -23,6 +23,8 @@ def initialize():
         subnet_nodes = df_tmp.tolist()
         subnets[names] = subnet_nodes
 
+    # we need to change it to middle data frame (epochnumber,nodeID, subnetID, group list, trust level, malicious status)
+
     df_output = df_init
     # df_output = df_output.drop(["Node_Type", "Subnet_ID", "List_Type"], axis=1)
     df_output = df_output.drop(["Node_Type", "Subnet_ID"], axis=1)
