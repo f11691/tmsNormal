@@ -10,6 +10,7 @@ import malicious
 import score
 import tms
 import voting
+import tmsanalyse
 
 
 ##########################
@@ -86,7 +87,6 @@ if __name__ == "__main__":
     num_known_nodes = know_nodes.size
 
     for node in know_nodes:
-
         df_insert = pd.DataFrame(
             {"Epoch": current_epoch, "Node_ID": [node], "Subnet_ID": [dict_of_nodes_subnets[node]],
              "List_Type": "XXXX",
@@ -137,11 +137,13 @@ if __name__ == "__main__":
         trustscore = dict(sorted(trustscore.items()))
         trustvalue = tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_middle, trustscore)
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
-        print("Num of epochs %s" % num_epochs_df_middle)
+        # print("Num of epochs %s" % num_epochs_df_middle)
         if len(num_epochs_df_middle) == 5:
-            print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
-            print(num_epochs_df_middle[0])
+            # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
+            # print(num_epochs_df_middle[0])
             df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-4:]), :]
+
+        node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle)
 
         for node in know_nodes:
             if node in malicious_nodes:
@@ -150,7 +152,7 @@ if __name__ == "__main__":
                 malicious_status = False
             df_insert = pd.DataFrame(
                 {"Epoch": current_epoch, "Node_ID": [node], "Subnet_ID": [dict_of_nodes_subnets[node]],
-                 "List_Type": "XXXX",
+                 "List_Type": [list_type[node]],
                  "Trust_Value": [trustvalue[node]], "Malicious_Status": [malicious_status]})
             df_middle = pd.concat([df_middle, df_insert])
         print(df_middle)
