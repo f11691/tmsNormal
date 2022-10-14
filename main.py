@@ -74,7 +74,7 @@ def initialize():
 
 
 if __name__ == "__main__":
-    df_init, df_output, subnets, dict_of_nodes_subnets, blacklist, graylist, whitelist, trustvalue_dict = initialize()
+    df_init, _, subnets, dict_of_nodes_subnets, blacklist, graylist, whitelist, trustvalue_dict = initialize()
     # Max X epochs (buffer)
     df_middle = pd.DataFrame(
         columns=["Epoch", "Node_ID", "Subnet_ID", "List_Type", "Trust_Value", "Malicious_Status"])
@@ -102,8 +102,9 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 10):
+    for i in range(current_epoch, 11):
         current_epoch += 1
+        print("#####################################")
         print("New epoch: %s" % current_epoch)
         m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
         malicious_nodes = m1.run_all()
@@ -132,23 +133,14 @@ if __name__ == "__main__":
         s4 = score.Score(v4vote, subnets[4])
         s4score = s4.scorearray()
 
-
-        # extract last 5 epochs from df_output
-        num_epochs = df_middle["Epoch"].unique().tolist()
-        num_epochs = pd.Series(num_epochs)
-        last_X_epochsindexes = num_epochs.nlargest(tms_last_X_required_epochs)
-        last_X_epochs_numbers = last_X_epochsindexes.index.values.tolist()
-        df_last_X_epochs = df_middle.loc[df_middle["Epoch"].isin(last_X_epochs_numbers)]
-
         trustscore = s1score | s2score | s3score | s4score
         trustscore = dict(sorted(trustscore.items()))
-        trustvalue = tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_last_X_epochs, trustscore)
-
+        trustvalue = tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_middle, trustscore)
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
-        # print("Num of epochs %s" % num_epochs_df_middle)
+        print("Num of epochs %s" % num_epochs_df_middle)
         if len(num_epochs_df_middle) == 5:
-            # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
-            # print(num_epochs_df_middle[0])
+            print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
+            print(num_epochs_df_middle[0])
             df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-4:]), :]
 
         for node in know_nodes:
