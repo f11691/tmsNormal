@@ -1,4 +1,5 @@
 import warnings
+from datetime import datetime
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
@@ -76,6 +77,11 @@ def initialize():
 
 if __name__ == "__main__":
     df_init, _, subnets, dict_of_nodes_subnets, blacklist, graylist, whitelist, trustvalue_dict = initialize()
+
+    df_log = pd.DataFrame(
+        columns=["Epoch", "Node_ID", "Node_Type", "Subnet_ID", "List_Type", "Trust_Value", "Malicious_Status",
+                 "Trust_Score", "Top_10_Trust"])
+
     # Max X epochs (buffer)
     df_middle = pd.DataFrame(
         columns=["Epoch", "Node_ID", "Subnet_ID", "List_Type", "Trust_Value", "Malicious_Status"])
@@ -145,14 +151,30 @@ if __name__ == "__main__":
 
         node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle)
 
+        tmp_dict = dict()
         for node in know_nodes:
             if node in malicious_nodes:
                 malicious_status = True
             else:
                 malicious_status = False
+            node_type = df_init.loc[df_init["Node_ID"] == node]
+            node_type = node_type["Node_Type"].item()
+
+            if node in top_percent_dict:
+                tmp_dict[node] = True
+            else:
+                tmp_dict[node] = False
+
             df_insert = pd.DataFrame(
-                {"Epoch": current_epoch, "Node_ID": [node], "Subnet_ID": [dict_of_nodes_subnets[node]],
-                 "List_Type": [list_type[node]],
-                 "Trust_Value": [trustvalue[node]], "Malicious_Status": [malicious_status]})
+                {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node_type],
+                 "Subnet_ID": [dict_of_nodes_subnets[node]], "List_Type": [list_type[node]],
+                 "Trust_Value": [trustvalue[node]], "Malicious_Status": [malicious_status],
+                 "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]]})
             df_middle = pd.concat([df_middle, df_insert])
-        print(df_middle)
+
+        df_log = pd.concat([df_log, df_middle])
+
+    dateTimeObj = datetime.now()
+    timestampStr = dateTimeObj.strftime("%d-%b-%Y-(%H:%M:%S.%f)")
+    outputname = "Simulation-" + timestampStr + ".csv"
+    df_log.to_csv(outputname)
