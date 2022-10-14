@@ -1,10 +1,20 @@
+import warnings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
 
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
 import malicious
 import score
 import tms
 import voting
 
+
+##########################
+# Use with pandas < 1.5.0
+##########################
 
 def initialize():
     """
@@ -22,6 +32,13 @@ def initialize():
         df_tmp = df_tmp["Node_ID"]
         subnet_nodes = df_tmp.tolist()
         subnets[names] = subnet_nodes
+
+    dict_of_nodes_subnets = dict()
+    node_names = df_init["Node_ID"].tolist()
+    for node in node_names:
+        df_tmp = df_init.loc[df_init['Node_ID'] == node]
+        df_tmp = df_tmp["Subnet_ID"].item()
+        dict_of_nodes_subnets[node] = df_tmp
 
     # we need to change it to middle data frame (epochnumber,nodeID, subnetID, group list, trust level, malicious status)
 
@@ -53,19 +70,25 @@ def initialize():
     for index, row in df_output.iterrows():
         trustvalue_dict[row["Node_ID"]] = row["Trust_Value"]
 
-    return df_init, df_output, subnets, blacklist, graylist, whitelist, trustvalue_dict
+    return df_init, df_output, subnets, dict_of_nodes_subnets, blacklist, graylist, whitelist, trustvalue_dict
 
 
 if __name__ == "__main__":
-    df_init, df_output, subnets, blacklist, graylist, whitelist, trustvalue_dict = initialize()
+    df_init, df_output, subnets, dict_of_nodes_subnets, blacklist, graylist, whitelist, trustvalue_dict = initialize()
     print(df_output)
+    # Max X epochs (buffer)
+    df_middle = pd.DataFrame(
+        columns=["Epoch", "Node_ID", "Subnet_ID", "List_Type", "Trust_Value", "Malicious_Status"])
     tms_last_X_required_epochs = 5
 
     know_nodes = df_init["Node_ID"].unique()
+    num_known_nodes = know_nodes.size
 
     current_epoch = 0
-    """
+    print("DF INIT")
     print(df_init)
+    print("-----")
+    """
     print(df_output)
     print(subnets)
     print(blacklist)
@@ -73,12 +96,15 @@ if __name__ == "__main__":
     print(whitelist)
     print(trustvalue_dict)
     """
+    print(subnets[1])
+    print(1 in subnets[2])
     print(20 * "#")
 
     for i in range(current_epoch, 10):
         current_epoch += 1
+        print("New epoch: %s" % current_epoch)
         m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
-        m1.run_all()
+        malicious_nodes = m1.run_all()
 
         # Subnet 1
         v1 = voting.Voter(subnets[1])
@@ -114,8 +140,23 @@ if __name__ == "__main__":
 
         trustscore = s1score | s2score | s3score | s4score
         trustscore = dict(sorted(trustscore.items()))
-        tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_last_X_epochs, trustscore)
+        trustvalue = tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_last_X_epochs, trustscore)
+
+        num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
+        print("Num of epochs %s" % num_epochs_df_middle)
+        if len(num_epochs_df_middle) == 5:
+            print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
+            print(num_epochs_df_middle[0])
+            df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-4:]), :]
 
         for node in know_nodes:
-            df_insert = pd.DataFrame({"Epoch": current_epoch, "Node_ID": node, "List_Type": ""})
-            df_output = pd.concat([df_output, df_insert])
+            if node in malicious_nodes:
+                malicious_status = True
+            else:
+                malicious_status = False
+            df_insert = pd.DataFrame(
+                {"Epoch": current_epoch, "Node_ID": [node], "Subnet_ID": [dict_of_nodes_subnets[node]],
+                 "List_Type": "XXXX",
+                 "Trust_Value": [trustvalue[node]], "Malicious_Status": [malicious_status]})
+            df_middle = pd.concat([df_middle, df_insert])
+        print(df_middle)

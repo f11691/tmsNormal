@@ -66,4 +66,4 @@ class Malicious:  # for calculate malicious nodes between 3 groups
         self.calculated_mw()
         self.calculated_mb()
         self.calculated_mg()
-        self.merge_m()
+        return self.merge_m()

@@ -1,13 +1,13 @@
 
+"""
 def last_X_TV(know_nodes,middle_df):
     avgtv = dict()
     for node in know_nodes:
         for epoch in middle_df:
+"""
 
 
-
-def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_epochs,
-                trustscore):  # remove the items from trust score lists that their key id are malicious
+def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_epochs, trustscore):  # remove the items from trust score lists that their key id are malicious
 
     trustvaluedict = dict()
 
@@ -45,9 +45,9 @@ def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_ep
 
 
 
-    """
-    for i in nodenumber:
-        keys = set(self.nodenumber)
-        self.trustvalue = {k: ((malicious.m[k] * 3 + score.trustscore[k] + blockchain.lastepoch[k] * 6) / 10) for k
-                           in keys}
-    """
+"""
+for i in nodenumber:
+    keys = set(self.nodenumber)
+    self.trustvalue = {k: ((malicious.m[k] * 3 + score.trustscore[k] + blockchain.lastepoch[k] * 6) / 10) for k
+                       in keys}
+"""
