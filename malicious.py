@@ -31,14 +31,14 @@ class Malicious:  # for calculate malicious nodes between 3 groups
             self.xw = 0
 
     def calculated_xg(self):  # calculate number of malicious nodes in gray list
-        # self.xg = int(self.x * (25 / 100))
-        self.xg = int(self.x * (80 / 100))
+        self.xg = int(self.x * (25 / 100))
+        #self.xg = int(self.x * (80 / 100))
         if self.xg < 1:
             self.xg = 0
 
     def calculated_xb(self):  # calculate number of malicious nodes in black list
-        # self.xb = int((self.x * (70 / 100)))
-        self.xb = int((self.x * (15 / 100)))
+        self.xb = int((self.x * (70 / 100)))
+        #self.xb = int((self.x * (15 / 100)))
         if self.xb < 1:
             self.xb = 0
 
