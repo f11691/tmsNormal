@@ -143,6 +143,7 @@ if __name__ == "__main__":
         trustscore = dict(sorted(trustscore.items()))
         trustvalue = tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_middle, trustscore)
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
+        latest_epoch = max(num_epochs_df_middle)
         # print("Num of epochs %s" % num_epochs_df_middle)
         if len(num_epochs_df_middle) == 5:
             # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
@@ -172,7 +173,8 @@ if __name__ == "__main__":
                  "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]]})
             df_middle = pd.concat([df_middle, df_insert])
 
-        df_log = pd.concat([df_log, df_middle])
+        df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
+        df_log = pd.concat([df_log, df_to_log])
 
     dateTimeObj = datetime.now()
     timestampStr = dateTimeObj.strftime("%d-%b-%Y-(%H:%M:%S.%f)")
