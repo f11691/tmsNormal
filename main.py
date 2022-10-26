@@ -12,6 +12,7 @@ import score
 import tms
 import voting
 import tmsanalyse
+import gmalicious
 
 
 ##########################
@@ -108,12 +109,18 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 50):
+    for i in range(current_epoch, 10):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
-        m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
-        malicious_nodes = m1.run_all()
+        #m1 = malicious.Malicious(20, 2, len(whitelist), len(blacklist), len(graylist), whitelist, blacklist, graylist)
+        #malicious_nodes = m1.run_all()
+
+        m1 = gmalicious.malicious()
+        malicious_nodes = m1     #get malicious list from user
+        print("#################GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG####################")
+        print(malicious_nodes)
+        print("##################GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG###################")
 
         # Subnet 1
         v1 = voting.Voter(subnets[1])
@@ -141,7 +148,7 @@ if __name__ == "__main__":
 
         trustscore = s1score | s2score | s3score | s4score
         trustscore = dict(sorted(trustscore.items()))
-        trustvalue = tms.trust_value(know_nodes, m1.m, tms_last_X_required_epochs, df_middle, trustscore)
+        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore)
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
         latest_epoch = max(num_epochs_df_middle)
         # print("Num of epochs %s" % num_epochs_df_middle)
