@@ -11,9 +11,13 @@ def analyse(df_middle):
     df_last_epoch = df_middle[df_middle["Epoch"].max() == df_middle["Epoch"]]
 
     node_trust_value_dict = dict()
+    full_node_dict = dict()
 
     for _, row in df_last_epoch.iterrows():
         node_trust_value_dict[row["Node_ID"]] = row["Trust_Value"]
+
+    for _, row in df_last_epoch.iterrows():
+        full_node_dict[row["Node_ID"]] = row["Node_Type"]
 
     node_trust_value_dict = dict(sorted(node_trust_value_dict.items(), key=lambda item: item[1], reverse=True))
 
@@ -22,10 +26,15 @@ def analyse(df_middle):
     number_elements = int(top_percent * len(node_trust_value_dict) / 100)
 
     top_percent_dict = {}
-    for i, key in enumerate(node_trust_value_dict.keys(), 1):
-        if i > number_elements:
-            break
-        top_percent_dict[key] = node_trust_value_dict[key]
+
+
+        #for j, key in full_node_dict.keys() != "F":
+    for j, v in full_node_dict.items():
+        if v == "L":
+            for i, key in enumerate(node_trust_value_dict.keys(), 1):
+                if i > number_elements:
+                    break
+                top_percent_dict[key] = node_trust_value_dict[key]
 
     list_type = dict()
     for node in node_trust_value_dict:

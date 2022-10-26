@@ -118,9 +118,6 @@ if __name__ == "__main__":
 
         m1 = gmalicious.malicious()
         malicious_nodes = m1     #get malicious list from user
-        print("#################GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG####################")
-        print(malicious_nodes)
-        print("##################GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG###################")
 
         # Subnet 1
         v1 = voting.Voter(subnets[1])
