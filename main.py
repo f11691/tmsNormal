@@ -95,7 +95,7 @@ if __name__ == "__main__":
     for node in know_nodes:
         df_insert = pd.DataFrame(
             {"Epoch": current_epoch, "Node_ID": [node], "Subnet_ID": [dict_of_nodes_subnets[node]],
-             "List_Type": "XXXX",
+             "List_Type": "G",
              "Trust_Value": [trustvalue_dict[node]], "Malicious_Status": [False]})
         df_middle = pd.concat([df_middle, df_insert])
 
