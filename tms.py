@@ -18,7 +18,12 @@ def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_ep
                 trustvalue = round(trustvalue, 1)
                 trustvaluedict[node] = trustvalue
 
+        for k, _ in trustvaluedict.items():
+            if trustvaluedict[k] == 0.0 or trustvaluedict[k] == -0.0:
+                trustvaluedict[k] = abs(0)
+
         return trustvaluedict
+    """
     else:
         # Potentially dead code
         # Known dublicate: maybe remove if logic is not different
@@ -35,3 +40,4 @@ def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_ep
                     "Trust_Value"].mean(axis=0) * 6) / 7
                 trustvalue = round(trustvalue, 1)
                 trustvaluedict[node] = trustvalue
+    """
