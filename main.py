@@ -12,6 +12,7 @@ import tms
 import voting
 import tmsanalyse
 import gmalicious
+import transaction
 
 
 ##########################
@@ -111,7 +112,7 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 10):
+    for i in range(current_epoch, 3):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
@@ -157,6 +158,9 @@ if __name__ == "__main__":
             df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-4:]), :]
 
         node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle, fullnodes)
+
+        print("AJHIJADBHFBHABFHKF")
+        print(transaction.req(know_nodes))
 
         tmp_dict = dict()
         for node in know_nodes:

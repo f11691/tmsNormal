@@ -7,7 +7,8 @@ def req(know_nodes):
 
     for node in know_nodes:
         request = np.random.uniform(0, 10)
-        request = round(request, 1)
+        request = round(request, 0)
+        request = int(request)
         req_dict[node] = request
 
     return req_dict
