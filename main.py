@@ -159,8 +159,11 @@ if __name__ == "__main__":
 
         node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle, fullnodes)
 
-        print("AJHIJADBHFBHABFHKF")
+        print("Request of the nodes:")
         print(transaction.req(know_nodes))
+
+        print("Accepted request:")
+        print(transaction.acp(node_trust_value_dict))
 
         tmp_dict = dict()
         for node in know_nodes:

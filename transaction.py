@@ -15,7 +15,8 @@ def req(know_nodes):
 
 
 # function to calculate how many of request of each node must accept by network based on their trust level
-def acp(req_dict, node_trust_value_dict, malicious_ids):
+# def acp(req_dict, node_trust_value_dict, malicious_ids):
+def acp(node_trust_value_dict):
     accp_dict = dict()
 
     for node in node_trust_value_dict:
