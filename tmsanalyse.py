@@ -1,4 +1,4 @@
-def analyse(df_middle):
+def analyse(df_middle, full_node_ids):
     """
     0. extract last epoch of df_middle !
     1. extract trust value and node id as dict !
@@ -19,6 +19,10 @@ def analyse(df_middle):
     for _, row in df_last_epoch.iterrows():
         full_node_dict[row["Node_ID"]] = row["Node_Type"]
 
+    for k, _ in node_trust_value_dict.items():
+        if node_trust_value_dict[k] == 0.0 or node_trust_value_dict[k] == -0.0:
+            node_trust_value_dict[k] = abs(0)
+
     node_trust_value_dict = dict(sorted(node_trust_value_dict.items(), key=lambda item: item[1], reverse=True))
 
     top_percent = 10
@@ -27,14 +31,15 @@ def analyse(df_middle):
 
     top_percent_dict = {}
 
+    copy_node_trust_value_dict = dict(node_trust_value_dict)
 
-        #for j, key in full_node_dict.keys() != "F":
-    for j, v in full_node_dict.items():
-        if v == "L":
-            for i, key in enumerate(node_trust_value_dict.keys(), 1):
-                if i > number_elements:
-                    break
-                top_percent_dict[key] = node_trust_value_dict[key]
+    for element in full_node_ids:
+        copy_node_trust_value_dict.pop(element)
+
+    for i, key in enumerate(copy_node_trust_value_dict.keys(), 1):
+        if i > number_elements:
+            break
+        top_percent_dict[key] = copy_node_trust_value_dict[key]
 
     list_type = dict()
     for node in node_trust_value_dict:
