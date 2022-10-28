@@ -159,11 +159,8 @@ if __name__ == "__main__":
 
         node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle, fullnodes)
 
-        print("Request of the nodes:")
-        print(transaction.req(know_nodes))
-
-        print("Accepted request:")
-        print(transaction.acp(node_trust_value_dict))
+        request_number = transaction.req(know_nodes)
+        accepted_request_number = transaction.acp(node_trust_value_dict)
 
         tmp_dict = dict()
         for node in know_nodes:
@@ -181,10 +178,10 @@ if __name__ == "__main__":
 
             df_insert = pd.DataFrame(
                 {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node_type],
-                 "Subnet_ID": [dict_of_nodes_subnets[node]],
-                 "List_Type": [list_type[node]],
+                 "Subnet_ID": [dict_of_nodes_subnets[node]], "List_Type": [list_type[node]],
                  "Trust_Value": [trustvalue[node]], "Malicious_Status": [malicious_status],
-                 "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]]})
+                 "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]],
+                 "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
             df_middle = pd.concat([df_middle, df_insert])
 
         df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
