@@ -5,7 +5,7 @@ def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_ep
 
     if tms_last_X_required_epochs != len(last_X_epochs):
         for node in know_nodes:
-            if node == malicious_ids:
+            if node in malicious_ids:
                 # 10 thing
                 trustvalue = (-3 + trustscore[node] + last_X_epochs.loc[last_X_epochs["Node_ID"] == node][
                     "Trust_Value"].mean(axis=0) * 6) / 10
