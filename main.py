@@ -112,7 +112,7 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 7):
+    for i in range(current_epoch, 10):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
@@ -175,7 +175,6 @@ if __name__ == "__main__":
                 tmp_dict[node] = True
             else:
                 tmp_dict[node] = False
-
             df_insert = pd.DataFrame(
                 {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node_type],
                  "Subnet_ID": [dict_of_nodes_subnets[node]], "List_Type": [list_type[node]],

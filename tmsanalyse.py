@@ -45,9 +45,12 @@ def analyse(df_middle, full_node_ids):
     for node in node_trust_value_dict:
         if node_trust_value_dict[node] >= 0.8:
             list_type[node] = "W"
-        elif 0.8 > node_trust_value_dict[node] >= 0.35:
+        elif 0.8 > node_trust_value_dict[node] >= 0.3:
             list_type[node] = "G"
-        elif 0.35 > node_trust_value_dict[node] >= 0:
+        elif 0.3 > node_trust_value_dict[node] >= 0:
             list_type[node] = "B"
+        else:
+            print("Node ID %s has undefined List type for value %s" % (node, node_trust_value_dict[node]))
+            raise ValueError
 
     return node_trust_value_dict, list_type, top_percent_dict
