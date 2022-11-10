@@ -27,7 +27,7 @@ class Voter:  # nodes as voters
                 if x == y:
                     pass
                 else:
-                    v = random.triangular(-1, 1, 0)
+                    v = random.triangular(0, 1, 0.5)
                     v = round(v, 1)
                     vote[x, y] = v
 

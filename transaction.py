@@ -20,17 +20,19 @@ def acp(node_trust_value_dict):
     accp_dict = dict()
 
     for node in node_trust_value_dict:
-        if node_trust_value_dict[node] >= 0.5:
+        if node_trust_value_dict[node] >= 0.9:
             accp_dict[node] = 100
-        elif 0.5 > node_trust_value_dict[node] >= 0:
-            accp_dict[node] = 80
-        elif 0 > node_trust_value_dict[node] >= -0.1:
+        elif 0.9 > node_trust_value_dict[node] >= 0.7:
+            accp_dict[node] = 85
+        elif 0.7 > node_trust_value_dict[node] >= 0.5:
+            accp_dict[node] = 70
+        elif 0.5 > node_trust_value_dict[node] >= 0.3:
             accp_dict[node] = 50
-        elif -0.1 > node_trust_value_dict[node] >= -0.5:
+        elif 0.3 > node_trust_value_dict[node] >= 0.1:
             accp_dict[node] = 30
-        elif -0.5 > node_trust_value_dict[node] >= -1:
+        elif 0.1 > node_trust_value_dict[node] >= 0:
             accp_dict[node] = 0
 
     return accp_dict
 
-# or calculate how many of them accepted from request numbers?!?!
+

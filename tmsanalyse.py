@@ -43,11 +43,11 @@ def analyse(df_middle, full_node_ids):
 
     list_type = dict()
     for node in node_trust_value_dict:
-        if node_trust_value_dict[node] >= 0.5:
+        if node_trust_value_dict[node] >= 0.8:
             list_type[node] = "W"
-        elif 0.5 > node_trust_value_dict[node] >= -0.1:
+        elif 0.8 > node_trust_value_dict[node] >= 0.35:
             list_type[node] = "G"
-        elif -0.1 > node_trust_value_dict[node] >= -1:
+        elif 0.35 > node_trust_value_dict[node] >= 0:
             list_type[node] = "B"
 
     return node_trust_value_dict, list_type, top_percent_dict
