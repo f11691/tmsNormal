@@ -96,7 +96,7 @@ if __name__ == "__main__":
     know_nodes = df_init["Node_ID"].unique()
     num_known_nodes = know_nodes.size
 
-    # todo: fix node_type for first epoch
+
     for node in know_nodes:
         df_insert = pd.DataFrame(
             {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node], "Subnet_ID": [dict_of_nodes_subnets[node]],
