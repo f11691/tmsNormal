@@ -46,7 +46,8 @@ def initialize():
         df_tmp = df_tmp["Subnet_ID"].item()
         dict_of_nodes_subnets[node] = df_tmp
 
-    # we need to change it to middle data frame (epochnumber,nodeID, subnetID, group list, trust level, malicious status)
+    # we need to change it to middle data frame (epochnumber,nodeID, subnetID, group list, trust level, malicious
+    # status)
 
     df_output = df_init
     # df_output = df_output.drop(["Node_Type", "Subnet_ID", "List_Type"], axis=1)
@@ -95,7 +96,6 @@ if __name__ == "__main__":
 
     know_nodes = df_init["Node_ID"].unique()
     num_known_nodes = know_nodes.size
-
 
     for node in know_nodes:
         df_insert = pd.DataFrame(

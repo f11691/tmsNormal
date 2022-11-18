@@ -12,4 +12,3 @@ def malicious():
         mlst.append(ele)  # adding the element
 
     return mlst
-
