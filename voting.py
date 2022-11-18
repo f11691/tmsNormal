@@ -41,4 +41,5 @@ class Voter:  # nodes as voters
             keys = set(self.neighbours).intersection(
                 set(syntheticdata.tvdict.keys()))  # Create a new dict with merging list of neighbors and new trust scores.
             return {k: syntheticdata.tvdict[k] for k in keys}
+            
 """
