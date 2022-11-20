@@ -1,6 +1,6 @@
-def analyse(df_middle, full_node_ids):
+def analyse(df_middle_tmsanalyse_fuction, full_node_ids):
     """
-    0. extract last epoch of df_middle !
+    0. extract latest epoch of df_middle !
     1. extract trust value and node id as dict !
     2. sort dict by value !
     3. get top 10% of value and node id -> new list !
@@ -8,7 +8,7 @@ def analyse(df_middle, full_node_ids):
     return sort dict, list_type, new list for log
     """
 
-    df_last_epoch = df_middle[df_middle["Epoch"].max() == df_middle["Epoch"]]
+    df_last_epoch = df_middle_tmsanalyse_fuction[df_middle_tmsanalyse_fuction["Epoch"].max() == df_middle_tmsanalyse_fuction["Epoch"]]
 
     node_trust_value_dict = dict()
     full_node_dict = dict()

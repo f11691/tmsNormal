@@ -91,13 +91,18 @@ if __name__ == "__main__":
     df_middle = pd.DataFrame(
         columns=["Epoch", "Node_ID", "Node_Type", "Subnet_ID", "List_Type", "Trust_Value", "Malicious_Status"])
 
-    df_calculation = pd.DataFrame(columns=["Node_ID", "Epoch", "Malicious_Status", "M_Rate"])
-
     current_epoch = 0
-    tms_last_X_required_epochs = 5
+    tms_last_X_required_epochs = 1
 
     know_nodes = df_init["Node_ID"].unique()
     num_known_nodes = know_nodes.size
+
+    df_calculation = pd.DataFrame(columns=["Node_ID", "Epoch", "Malicious_Status", "M_Rate"])
+
+    for node in know_nodes:
+        df_insert_calculation = pd.DataFrame(
+            {"Node_ID": [node], "Epoch": current_epoch, "Malicious_Status": [0], "M_Rate": 0})
+        df_calculation = pd.concat([df_calculation, df_insert_calculation])
 
     for node in know_nodes:
         df_insert = pd.DataFrame(
@@ -150,16 +155,48 @@ if __name__ == "__main__":
 
         trustscore = s1score | s2score | s3score | s4score
         trustscore = dict(sorted(trustscore.items()))
-        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore)
+
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
         latest_epoch = max(num_epochs_df_middle)
         # print("Num of epochs %s" % num_epochs_df_middle)
-        if len(num_epochs_df_middle) == 5:
+        """
+        if len(num_epochs_df_middle) == 1:
             # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
             # print(num_epochs_df_middle[0])
-            df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-4:]), :]
+            df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-1:]), :]
+        """
 
-        node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle, fullnodes)
+        # if current_epoch != 1:
+        #   all get the first
+        # else:
+        # tmsanaylse get curr -1
+        # trustvale... get the curr
+
+        if len(num_epochs_df_middle) == 3:
+            # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
+            # print(num_epochs_df_middle[0])
+            df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-1:]), :]
+        df_middle_tmsanalyse_fuction = df_middle.copy(deep=True)
+        df_middle_trust_value_function = df_middle.copy(deep=True)
+        df_middle_tmsanalyse_fuction = df_middle_tmsanalyse_fuction.loc[
+            df_middle_tmsanalyse_fuction["Epoch"] == latest_epoch]
+        df_middle_trust_value_function = df_middle_trust_value_function.loc[
+            df_middle_trust_value_function["Epoch"] == latest_epoch]
+
+        print(df_middle_trust_value_function)
+        """
+        if current_epoch == 1:
+            df_middle_tmsanalyse_fuction = df_middle.copy(deep=True)
+            df_middle_tmsanalyse_fuction = df_middle_tmsanalyse_fuction.loc[df_middle_tmsanalyse_fuction["Epoch"] == current_epoch-1]
+            df_middle_trust_value_function = df_middle.copy(deep=True).loc[df_middle_tmsanalyse_fuction["Epoch"] == current_epoch-1]
+        else:
+            df_middle_tmsanalyse_fuction = df_middle.copy(deep=True)
+            df_middle_tmsanalyse_fuction = df_middle_tmsanalyse_fuction.loc[df_middle_tmsanalyse_fuction["Epoch"] == current_epoch-1]
+            df_middle_trust_value_function = df_middle.copy(deep=True).loc[df_middle_tmsanalyse_fuction["Epoch"] == current_epoch-1]
+        """
+        print("Current epoch: %s" % current_epoch)
+
+        node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle_tmsanalyse_fuction, fullnodes)
 
         request_number = transaction.req(know_nodes)
         accepted_request_number = transaction.acp(node_trust_value_dict)
@@ -179,13 +216,6 @@ if __name__ == "__main__":
                 tmp_dict[node] = True
             else:
                 tmp_dict[node] = False
-            df_insert = pd.DataFrame(
-                {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node_type],
-                 "Subnet_ID": [dict_of_nodes_subnets[node]], "List_Type": [list_type[node]],
-                 "Trust_Value": [trustvalue[node]], "Malicious_Status": [malicious_status],
-                 "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]],
-                 "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
-            df_middle = pd.concat([df_middle, df_insert])
 
             df_insert_calculation = pd.DataFrame(
                 {"Node_ID": [node], "Epoch": current_epoch, "Malicious_Status": [malicious_status_value]})
@@ -194,6 +224,12 @@ if __name__ == "__main__":
                               .sort_values(['key', 'Node_ID', 'Epoch'], ascending=True, ignore_index=True)
                               .drop(columns=['key']))
 
+            current_node_mal_sum = df_calculation.loc[df_calculation["Node_ID"] == node][
+                "Malicious_Status"].sum()
+            current_node_m_rate = df_calculation.loc[df_calculation["Node_ID"] == node][
+                                      "Malicious_Status"].sum() / current_epoch
+
+            """
             if current_epoch != 1:
                 current_node_mal_sum = df_calculation.loc[df_calculation["Node_ID"] == node][
                     "Malicious_Status"].sum()
@@ -202,12 +238,30 @@ if __name__ == "__main__":
             else:
                 current_node_mal_sum = 1.0
                 current_node_m_rate = 1.0
+            """
 
             index = \
                 df_calculation.loc[
                     (df_calculation["Node_ID"] == node) & (df_calculation["Epoch"] == current_epoch)].index[
                     0]
             df_calculation.at[index, "M_Rate"] = current_node_m_rate
+            "Somehow we lose here the update of the node 2 for epoch 2"
+            df_calculation_trust_value_function = df_calculation.copy(deep=True)
+            print("THIS IS OUR DF CALCULATION BEFORE")
+            print(df_calculation_trust_value_function)
+            trustvalue = tms.trust_value(node, df_middle_trust_value_function, trustscore,
+                                         df_calculation_trust_value_function.loc[
+                                             (df_calculation_trust_value_function["Node_ID"] == node) &
+                                             df_calculation_trust_value_function["Epoch"] == current_epoch])
+
+            df_insert = pd.DataFrame(
+                {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node_type],
+                 "Subnet_ID": [dict_of_nodes_subnets[node]], "List_Type": [list_type[node]],
+                 "Trust_Value": [trustvalue],
+                 "Malicious_Status": [malicious_status],
+                 "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]],
+                 "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
+            df_middle = pd.concat([df_middle, df_insert])
 
         df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
         df_log = pd.concat([df_log, df_to_log])
@@ -215,7 +269,7 @@ if __name__ == "__main__":
     dateTimeObj = datetime.now()
     timestampStr = dateTimeObj.strftime("%d-%b-%Y-(%H:%M:%S.%f)")
     outputname = "Simulation-" + timestampStr + ".csv"
-    # df_log.to_csv(outputname)
+    df_log.to_csv(outputname)
 
     print("M_Rate")
     print(df_calculation)
