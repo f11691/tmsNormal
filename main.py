@@ -187,11 +187,6 @@ if __name__ == "__main__":
                  "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
             df_middle = pd.concat([df_middle, df_insert])
 
-            """
-            for each epoch: <- we get for free, since we are in the current epoch each time we run it
-                (Sum the mal status value per node since epoch 0) / curr epoch num  
-            
-            """
             df_insert_calculation = pd.DataFrame(
                 {"Node_ID": [node], "Epoch": current_epoch, "Malicious_Status": [malicious_status_value]})
             df_calculation = pd.concat([df_calculation, df_insert_calculation])
@@ -199,9 +194,6 @@ if __name__ == "__main__":
                               .sort_values(['key', 'Node_ID', 'Epoch'], ascending=True, ignore_index=True)
                               .drop(columns=['key']))
 
-            # Get the last epoch -> df_calculation
-
-            # Filter out the current node we look at
             if current_epoch != 1:
                 current_node_mal_sum = df_calculation.loc[df_calculation["Node_ID"] == node][
                     "Malicious_Status"].sum()
