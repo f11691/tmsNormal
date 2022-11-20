@@ -91,6 +91,8 @@ if __name__ == "__main__":
     df_middle = pd.DataFrame(
         columns=["Epoch", "Node_ID", "Node_Type", "Subnet_ID", "List_Type", "Trust_Value", "Malicious_Status"])
 
+    df_calculation = pd.DataFrame(columns=["Node_ID", "Epoch", "Malicious_Status", "M_Rate"])
+
     current_epoch = 0
     tms_last_X_required_epochs = 5
 
@@ -112,7 +114,7 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 10):
+    for i in range(current_epoch, 5):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
@@ -166,8 +168,10 @@ if __name__ == "__main__":
         for node in know_nodes:
             if node in malicious_nodes:
                 malicious_status = True
+                malicious_status_value = -1
             else:
                 malicious_status = False
+                malicious_status_value = +1
             node_type = df_init.loc[df_init["Node_ID"] == node]
             node_type = node_type["Node_Type"].item()
 
@@ -183,10 +187,21 @@ if __name__ == "__main__":
                  "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
             df_middle = pd.concat([df_middle, df_insert])
 
+            df_insert_calculation = pd.DataFrame(
+                {"Node_ID": [node], "Epoch": current_epoch, "Malicious_Status": [malicious_status_value],
+                 "M_Rate": 1234})
+            df_calculation = pd.concat([df_calculation, df_insert_calculation])
+            df_calculation = (df_calculation.assign(key=df_calculation.groupby('Epoch')['Node_ID'].transform('max'))
+                              .sort_values(['key', 'Node_ID', 'Epoch'], ascending=True, ignore_index=True)
+                              .drop(columns=['key']))
+
         df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
         df_log = pd.concat([df_log, df_to_log])
 
     dateTimeObj = datetime.now()
     timestampStr = dateTimeObj.strftime("%d-%b-%Y-(%H:%M:%S.%f)")
     outputname = "Simulation-" + timestampStr + ".csv"
-    df_log.to_csv(outputname)
+    # df_log.to_csv(outputname)
+
+    print("AHAHHAHAHHAHAHAHA")
+    print(df_calculation)

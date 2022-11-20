@@ -3,7 +3,11 @@ def malicious():
     mlst = []
 
     # number of elements as input
-    n = int(input("Enter number of elements : "))
+    try:
+        n = int(input("Enter number of elements : "))
+    except ValueError:
+        print("try again!")
+        n = int(input("Enter number of elements : "))
 
     # iterating till the range
     for i in range(0, n):
