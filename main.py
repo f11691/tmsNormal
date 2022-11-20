@@ -212,6 +212,8 @@ if __name__ == "__main__":
         df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
         df_log = pd.concat([df_log, df_to_log])
 
+        # here the tms things...
+
     dateTimeObj = datetime.now()
     timestampStr = dateTimeObj.strftime("%d-%b-%Y-(%H:%M:%S.%f)")
     outputname = "Simulation-" + timestampStr + ".csv"
