@@ -94,7 +94,7 @@ if __name__ == "__main__":
     df_calculation = pd.DataFrame(columns=["Node_ID", "Epoch", "Malicious_Status", "M_Rate"])
 
     current_epoch = 0
-    tms_last_X_required_epochs = 5
+    tms_last_X_required_epochs = 2
 
     know_nodes = df_init["Node_ID"].unique()
     num_known_nodes = know_nodes.size
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 5):
+    for i in range(current_epoch, 11):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
@@ -123,6 +123,42 @@ if __name__ == "__main__":
 
         m1 = gmalicious.malicious()
         malicious_nodes = m1  # get malicious list from user
+        m_rate = dict()
+        for node in know_nodes:
+            if node in malicious_nodes:
+                malicious_status = True
+                malicious_status_value = -1
+            else:
+                malicious_status = False
+                malicious_status_value = +1
+            node_type = df_init.loc[df_init["Node_ID"] == node]
+            node_type = node_type["Node_Type"].item()
+            df_insert_calculation = pd.DataFrame(
+                {"Node_ID": [node], "Epoch": current_epoch, "Malicious_Status": [malicious_status_value]})
+            df_calculation = pd.concat([df_calculation, df_insert_calculation])
+            df_calculation = (df_calculation.assign(key=df_calculation.groupby('Epoch')['Node_ID'].transform('max'))
+                              .sort_values(['key', 'Node_ID', 'Epoch'], ascending=True, ignore_index=True)
+                              .drop(columns=['key']))
+
+            if current_epoch != 1:
+                current_node_mal_sum = df_calculation.loc[df_calculation["Node_ID"] == node][
+                    "Malicious_Status"].sum()
+                current_node_m_rate = df_calculation.loc[df_calculation["Node_ID"] == node][
+                                          "Malicious_Status"].sum() / current_epoch
+            else:
+                current_node_mal_sum = 1.0
+                current_node_m_rate = 1.0
+
+            index = \
+                df_calculation.loc[
+                    (df_calculation["Node_ID"] == node) & (df_calculation["Epoch"] == current_epoch)].index[
+                    0]
+            df_calculation.at[index, "M_Rate"] = current_node_m_rate
+
+            m_rate[node] = current_node_m_rate
+
+        print("gghh", m_rate)
+
 
         # Subnet 1
         v1 = voting.Voter(subnets[1])
@@ -150,14 +186,15 @@ if __name__ == "__main__":
 
         trustscore = s1score | s2score | s3score | s4score
         trustscore = dict(sorted(trustscore.items()))
-        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore)
+        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore,m_rate)
+        #trustvalue = round(4)
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
         latest_epoch = max(num_epochs_df_middle)
         # print("Num of epochs %s" % num_epochs_df_middle)
-        if len(num_epochs_df_middle) == 5:
+        if len(num_epochs_df_middle) == 2:
             # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
             # print(num_epochs_df_middle[0])
-            df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-4:]), :]
+            df_middle = df_middle.loc[df_middle["Epoch"].isin(num_epochs_df_middle[-1:]), :]
 
         node_trust_value_dict, list_type, top_percent_dict = tmsanalyse.analyse(df_middle, fullnodes)
 
@@ -187,37 +224,17 @@ if __name__ == "__main__":
                  "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
             df_middle = pd.concat([df_middle, df_insert])
 
-            df_insert_calculation = pd.DataFrame(
-                {"Node_ID": [node], "Epoch": current_epoch, "Malicious_Status": [malicious_status_value]})
-            df_calculation = pd.concat([df_calculation, df_insert_calculation])
-            df_calculation = (df_calculation.assign(key=df_calculation.groupby('Epoch')['Node_ID'].transform('max'))
-                              .sort_values(['key', 'Node_ID', 'Epoch'], ascending=True, ignore_index=True)
-                              .drop(columns=['key']))
-
-            if current_epoch != 1:
-                current_node_mal_sum = df_calculation.loc[df_calculation["Node_ID"] == node][
-                    "Malicious_Status"].sum()
-                current_node_m_rate = df_calculation.loc[df_calculation["Node_ID"] == node][
-                                          "Malicious_Status"].sum() / current_epoch
-            else:
-                current_node_mal_sum = 1.0
-                current_node_m_rate = 1.0
-
-            index = \
-                df_calculation.loc[
-                    (df_calculation["Node_ID"] == node) & (df_calculation["Epoch"] == current_epoch)].index[
-                    0]
-            df_calculation.at[index, "M_Rate"] = current_node_m_rate
 
         df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
         df_log = pd.concat([df_log, df_to_log])
 
-        # here the tms things...
+
+
 
     dateTimeObj = datetime.now()
     timestampStr = dateTimeObj.strftime("%d-%b-%Y-(%H:%M:%S.%f)")
     outputname = "Simulation-" + timestampStr + ".csv"
-    # df_log.to_csv(outputname)
+    df_log.to_csv(outputname)
 
     print("M_Rate")
     print(df_calculation)
