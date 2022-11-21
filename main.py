@@ -114,7 +114,7 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 11):
+    for i in range(current_epoch, 101):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
