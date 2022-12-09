@@ -159,7 +159,6 @@ if __name__ == "__main__":
 
         print("gghh", m_rate)
 
-
         # Subnet 1
         v1 = voting.Voter(subnets[1])
         v1vote = v1.voting(trustvalue_dict, df_middle)
@@ -186,8 +185,9 @@ if __name__ == "__main__":
 
         trustscore = s1score | s2score | s3score | s4score
         trustscore = dict(sorted(trustscore.items()))
-        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore, m_rate)
-        #trustvalue = round(4)
+        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore, m_rate,
+                                     fullnodes)
+        # trustvalue = round(4)
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
         latest_epoch = max(num_epochs_df_middle)
         # print("Num of epochs %s" % num_epochs_df_middle)
@@ -219,17 +219,14 @@ if __name__ == "__main__":
             df_insert = pd.DataFrame(
                 {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node_type],
                  "Subnet_ID": [dict_of_nodes_subnets[node]], "List_Type": [list_type[node]],
-                 "Trust_Value": [trustvalue[node]], "Malicious_Status": [malicious_status],
+                 "Trust_Value": [trustvalue[node]],
+                 "Malicious_Status": [malicious_status],
                  "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]],
                  "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
             df_middle = pd.concat([df_middle, df_insert])
 
-
         df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
         df_log = pd.concat([df_log, df_to_log])
-
-
-
 
     dateTimeObj = datetime.now()
     timestampStr = dateTimeObj.strftime("%d-%b-%Y-(%H:%M:%S.%f)")

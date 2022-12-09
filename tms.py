@@ -1,11 +1,14 @@
 def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_epochs, trustscore,
-                m_rate):  # remove the items from trust score lists that their key id are malicious
+                m_rate, full_node_ids):  # remove the items from trust score lists that their key id are malicious
 
     trustvaluedict = dict()
 
     if tms_last_X_required_epochs != len(last_X_epochs):
         for node in know_nodes:
-            if node in malicious_ids:
+            if node in full_node_ids:
+                trustvalue = 1
+                trustvaluedict[node] = trustvalue
+            elif node in malicious_ids:
                 # 10 thing
                 trustvalue = (trustscore[node] + (
                             last_X_epochs.loc[last_X_epochs["Node_ID"] == node]["Trust_Value"].mean(axis=0) * 2) +
