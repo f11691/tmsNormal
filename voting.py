@@ -42,18 +42,32 @@ class Voter:  # nodes as voters
                 else:
 
                     for node in node_trust_value_dict:
-                        if 0.75 < node_trust_value_dict[node] <= 1:
-                            v = node_trust_value_dict[node] + 0.05
+                        if node_trust_value_dict[node] <= 1:
+                            v = node_trust_value_dict[node] + 0.1
                             if v > 1:
                                 v = 1
-                        elif 0.5 < node_trust_value_dict[node] <= 0.75:
-                            v = node_trust_value_dict[node] + 0.025
-                        elif 0.25 < node_trust_value_dict[node] <= 0.5:
-                            v = node_trust_value_dict[node] - 0.025
-                        elif 0 < node_trust_value_dict[node] <= 0.25:
+                        elif 0.9 < node_trust_value_dict[node] < 1:
+                            v = node_trust_value_dict[node] + 0.1
+                        elif 0.8 < node_trust_value_dict[node] <= 0.9:
+                            v = node_trust_value_dict[node] + 0.09
+                        elif 0.7 < node_trust_value_dict[node] <= 0.8:
+                            v = node_trust_value_dict[node] + 0.08
+                        elif 0.6 < node_trust_value_dict[node] <= 0.7:
+                            v = node_trust_value_dict[node] + 0.08
+                        elif 0.5 < node_trust_value_dict[node] <= 0.6:
+                            v = node_trust_value_dict[node] + 0.07
+                        elif 0.4 < node_trust_value_dict[node] <= 0.6:
+                            v = node_trust_value_dict[node] + 0.06
+                        elif 0.3 < node_trust_value_dict[node] <= 0.4:
+                            v = node_trust_value_dict[node] + 0.04
+                        elif 0.2 < node_trust_value_dict[node] <= 0.3:
+                            v = node_trust_value_dict[node] - 0.03
+                        elif 0.1 < node_trust_value_dict[node] <= 0.2:
+                            v = node_trust_value_dict[node] - 0.04
+                        elif 0 < node_trust_value_dict[node] < 0.1:
                             v = node_trust_value_dict[node] - 0.05
                         elif node_trust_value_dict[node] <= 0:
-                            v = node_trust_value_dict[node] - 0.05
+                            v = node_trust_value_dict[node] - 0.1
                             if v < 0:
                                 v = 0
                         else:
