@@ -114,7 +114,7 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 101):
+    for i in range(current_epoch, 10):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
@@ -162,31 +162,31 @@ if __name__ == "__main__":
 
         # Subnet 1
         v1 = voting.Voter(subnets[1])
-        v1vote = v1.voting(trustvalue_dict)
+        v1vote = v1.voting(trustvalue_dict, df_middle)
         s1 = score.Score(v1vote, subnets[1])
         s1score = s1.scorearray()
 
         # Subnet 2
         v2 = voting.Voter(subnets[2])
-        v2vote = v2.voting(trustvalue_dict)
+        v2vote = v2.voting(trustvalue_dict, df_middle)
         s2 = score.Score(v2vote, subnets[2])
         s2score = s2.scorearray()
 
         # Subnet 3
         v3 = voting.Voter(subnets[3])
-        v3vote = v3.voting(trustvalue_dict)
+        v3vote = v3.voting(trustvalue_dict, df_middle)
         s3 = score.Score(v3vote, subnets[3])
         s3score = s3.scorearray()
 
         # Subnet 4
         v4 = voting.Voter(subnets[4])
-        v4vote = v4.voting(trustvalue_dict)
+        v4vote = v4.voting(trustvalue_dict, df_middle)
         s4 = score.Score(v4vote, subnets[4])
         s4score = s4.scorearray()
 
         trustscore = s1score | s2score | s3score | s4score
         trustscore = dict(sorted(trustscore.items()))
-        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore,m_rate)
+        trustvalue = tms.trust_value(know_nodes, m1, tms_last_X_required_epochs, df_middle, trustscore, m_rate)
         #trustvalue = round(4)
         num_epochs_df_middle = df_middle["Epoch"].unique().tolist()
         latest_epoch = max(num_epochs_df_middle)
