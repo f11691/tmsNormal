@@ -42,7 +42,7 @@ class Voter:  # nodes as voters
                 else:
 
                     for node in node_trust_value_dict:
-                        if node_trust_value_dict[node] <= 1:
+                        if node_trust_value_dict[node] == 1:
                             v = node_trust_value_dict[node] + 0.1
                             if v > 1:
                                 v = 1
@@ -56,17 +56,17 @@ class Voter:  # nodes as voters
                             v = node_trust_value_dict[node] + 0.08
                         elif 0.5 < node_trust_value_dict[node] <= 0.6:
                             v = node_trust_value_dict[node] + 0.07
-                        elif 0.4 < node_trust_value_dict[node] <= 0.6:
+                        elif 0.4 < node_trust_value_dict[node] <= 0.5:
                             v = node_trust_value_dict[node] + 0.06
                         elif 0.3 < node_trust_value_dict[node] <= 0.4:
-                            v = node_trust_value_dict[node] + 0.04
+                            v = node_trust_value_dict[node] + 0.05
                         elif 0.2 < node_trust_value_dict[node] <= 0.3:
                             v = node_trust_value_dict[node] - 0.03
                         elif 0.1 < node_trust_value_dict[node] <= 0.2:
                             v = node_trust_value_dict[node] - 0.04
-                        elif 0 < node_trust_value_dict[node] < 0.1:
+                        elif 0 < node_trust_value_dict[node] <= 0.1:
                             v = node_trust_value_dict[node] - 0.05
-                        elif node_trust_value_dict[node] <= 0:
+                        elif node_trust_value_dict[node] == 0:
                             v = node_trust_value_dict[node] - 0.1
                             if v < 0:
                                 v = 0
