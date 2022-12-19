@@ -42,7 +42,36 @@ class Voter:  # nodes as voters
                 else:
 
                     for node in node_trust_value_dict:
-                        if node_trust_value_dict[node] == 1:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       """ if node_trust_value_dict[node] == 1:
                             v = node_trust_value_dict[node] + 0.1
                             if v > 1:
                                 v = 1
@@ -74,7 +103,7 @@ class Voter:  # nodes as voters
                             print("Node ID %s has undefined List type for value %s" % (node, node_trust_value_dict[node]))
                             raise ValueError
 
-        return vote
+        return vote"""
 
     """def __init__(self, neighbours):
         self.vote_list = dict()
