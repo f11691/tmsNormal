@@ -13,6 +13,7 @@ import voting
 import tmsanalyse
 import gmalicious
 import transaction
+import sigma
 
 
 ##########################
@@ -91,6 +92,9 @@ if __name__ == "__main__":
     df_middle = pd.DataFrame(
         columns=["Epoch", "Node_ID", "Node_Type", "Subnet_ID", "List_Type", "Trust_Value", "Malicious_Status"])
 
+    df_avg = pd.DataFrame(
+        columns=["Epoch", "Node_ID", "Subnet_ID", "Trust_Value"])
+
     df_calculation = pd.DataFrame(columns=["Node_ID", "Epoch", "Malicious_Status", "M_Rate"])
 
     current_epoch = 0
@@ -104,6 +108,8 @@ if __name__ == "__main__":
             {"Epoch": current_epoch, "Node_ID": [node], "Node_Type": [node], "Subnet_ID": [dict_of_nodes_subnets[node]],
              "List_Type": "G", "Trust_Value": [trustvalue_dict[node]], "Malicious_Status": [False]})
         df_middle = pd.concat([df_middle, df_insert])
+        df_avg = pd.concat([df_avg, df_insert])
+
 
     """
     print(df_output)
@@ -158,6 +164,14 @@ if __name__ == "__main__":
             m_rate[node] = current_node_m_rate
 
         print("gghh", m_rate)
+
+        num_epochs_df_avg = df_avg["Epoch"].unique().tolist()
+        latest_epoch = max(num_epochs_df_avg)
+        # print("Num of epochs %s" % num_epochs_df_middle)
+        if len(num_epochs_df_middle) == 5:
+            # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
+            # print(num_epochs_df_middle[0])
+            df_avg = df_avg.loc[df_avg["Epoch"].isin(num_epochs_df_avg[-1:]), :]
 
         # Subnet 1
         v1 = voting.Voter(subnets[1])

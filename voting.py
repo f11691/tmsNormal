@@ -10,13 +10,14 @@ class Voter:  # nodes as voters
         self.vote_list = dict()
         self.neighbours = neighbours
 
-    def voting(self, trustvalue_dict, df_middle):
+    def voting(self, trustvalue_dict, df_middle, avg_dict, sig_dict):
         # print(trustvalue_dict)
         # print(self.neighbours)
 
         df_last_epoch = df_middle[df_middle["Epoch"].max() == df_middle["Epoch"]]
 
         node_trust_value_dict = dict()
+
 
         for _, row in df_last_epoch.iterrows():
             node_trust_value_dict[row["Node_ID"]] = row["Trust_Value"]
@@ -42,11 +43,18 @@ class Voter:  # nodes as voters
                 else:
 
                     for node in node_trust_value_dict:
+                        for node in avg_dict:
+                            if node_trust_value_dict[node] > (avg + sig):
+                                v = node_trust_value_dict[node] + random.random(0.1 , 0.2)
+                                 if v > 1:
+                                     v = 1
+                            elif (avg - sig) <= node_trust_value_dict[node] <= (avg + sig):
+                                 v = node_trust_value_dict[node] + random.random(0, 0.1)
 
-
-
-
-
+                            else (avg - sig) < node_trust_value_dict[node] :
+                                 v = node_trust_value_dict[node] - random.random(0.05, 0.1)
+                                    if v < 0:
+                                     v = 0
 
 
 
