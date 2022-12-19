@@ -10,17 +10,17 @@ def trust_value(know_nodes, malicious_ids, tms_last_X_required_epochs, last_X_ep
                 trustvaluedict[node] = trustvalue
             elif node in malicious_ids:
                 # 10 thing
-                trustvalue = ((trustscore[node]) + (
-                            last_X_epochs.loc[last_X_epochs["Node_ID"] == node]["Trust_Value"].mean(axis=0)) +
-                              m_rate[node]*2) / 4
+                trustvalue = ((trustscore[node]*1) + (
+                            last_X_epochs.loc[last_X_epochs["Node_ID"] == node]["Trust_Value"].mean(axis=0)*2) +
+                              m_rate[node]*2)/ 5
                 trustvalue = round(trustvalue, 5)
                 if trustvalue < 0:
                     trustvalue = 0
                 trustvaluedict[node] = trustvalue
             else:
                 # 7 thing
-                trustvalue = ((trustscore[node]) + (last_X_epochs.loc[last_X_epochs["Node_ID"] == node][
-                                                      "Trust_Value"].mean(axis=0)) + m_rate[node]*2) / 4
+                trustvalue = ((trustscore[node]*1) + (last_X_epochs.loc[last_X_epochs["Node_ID"] == node][
+                                                      "Trust_Value"].mean(axis=0)*2) + m_rate[node]*2) / 5
                 trustvalue = round(trustvalue, 5)
                 if trustvalue < 0:
                     trustvalue = 0

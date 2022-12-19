@@ -54,7 +54,7 @@ class Voter:  # nodes as voters
                     elif (avg_dict[y] - sig_dict[y]) <= node_trust_value_dict[y] <= (avg_dict[y] + sig_dict[y]):
                         v = node_trust_value_dict[y] + random.uniform(0, 0.1)
 
-                    elif (avg_dict[y] - sig_dict[y]) < node_trust_value_dict[y]:
+                    elif (avg_dict[y] - sig_dict[y]) > node_trust_value_dict[y]:
                         v = node_trust_value_dict[y] - random.uniform(0.05, 0.1)
                         if v < 0:
                             v = 0
