@@ -99,6 +99,7 @@ if __name__ == "__main__":
 
     current_epoch = 0
     tms_last_X_required_epochs = 2
+    avg_last_X_required_epochs = 5
 
     know_nodes = df_init["Node_ID"].unique()
     num_known_nodes = know_nodes.size
@@ -120,7 +121,7 @@ if __name__ == "__main__":
     print(trustvalue_dict)
     """
 
-    for i in range(current_epoch, 101):
+    for i in range(current_epoch, 10):
         current_epoch += 1
         print("#####################################")
         print("New epoch: %s" % current_epoch)
@@ -168,32 +169,34 @@ if __name__ == "__main__":
         num_epochs_df_avg = df_avg["Epoch"].unique().tolist()
         latest_epoch = max(num_epochs_df_avg)
         # print("Num of epochs %s" % num_epochs_df_middle)
-        if len(num_epochs_df_middle) == 5:
+        if len(num_epochs_df_avg) == 5:
             # print("!!!!!!!! NOW WE NEED TO DELETE !!!!!!!!!")
             # print(num_epochs_df_middle[0])
             df_avg = df_avg.loc[df_avg["Epoch"].isin(num_epochs_df_avg[-1:]), :]
 
+        avg_dict, sig_dict = sigma.sigma(know_nodes, avg_last_X_required_epochs, df_avg)
+
         # Subnet 1
         v1 = voting.Voter(subnets[1])
-        v1vote = v1.voting(trustvalue_dict, df_middle)
+        v1vote = v1.voting(trustvalue_dict, df_middle, avg_dict, sig_dict)
         s1 = score.Score(v1vote, subnets[1])
         s1score = s1.scorearray()
 
         # Subnet 2
         v2 = voting.Voter(subnets[2])
-        v2vote = v2.voting(trustvalue_dict, df_middle)
+        v2vote = v2.voting(trustvalue_dict, df_middle, avg_dict, sig_dict)
         s2 = score.Score(v2vote, subnets[2])
         s2score = s2.scorearray()
 
         # Subnet 3
         v3 = voting.Voter(subnets[3])
-        v3vote = v3.voting(trustvalue_dict, df_middle)
+        v3vote = v3.voting(trustvalue_dict, df_middle, avg_dict, sig_dict)
         s3 = score.Score(v3vote, subnets[3])
         s3score = s3.scorearray()
 
         # Subnet 4
         v4 = voting.Voter(subnets[4])
-        v4vote = v4.voting(trustvalue_dict, df_middle)
+        v4vote = v4.voting(trustvalue_dict, df_middle, avg_dict, sig_dict)
         s4 = score.Score(v4vote, subnets[4])
         s4score = s4.scorearray()
 
@@ -238,6 +241,7 @@ if __name__ == "__main__":
                  "Trust_Score": [trustscore[node]], "Top_10_Trust": [tmp_dict[node]],
                  "Request_Number": request_number[node], "Accepted_Request_Number": accepted_request_number[node]})
             df_middle = pd.concat([df_middle, df_insert])
+            df_avg = pd.concat([df_avg, df_insert])
 
         df_to_log = df_middle.loc[df_middle["Epoch"] == latest_epoch]
         df_log = pd.concat([df_log, df_to_log])

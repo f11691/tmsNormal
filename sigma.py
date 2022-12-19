@@ -11,7 +11,7 @@ def sigma(know_nodes, tms_last_X_required_epochs, last_X_epochs):
             avg = round(avg, 5)
             avg_dict[node] = avg
             sig = np.std(last_X_epochs.loc[last_X_epochs["Node_ID"] == node]["Trust_Value"])
-            sig = round(sig, 5)
+            sig = np.around(sig, 5)
             sig_dict[node] = sig
 
     return avg_dict, sig_dict
