@@ -18,9 +18,8 @@ class Score:  # calculate trust score of each subnet
         neighbours = convert[0]
         # Delete first row
         convert = np.delete(convert, 0, 0)
-        total_0_axis = np.average(convert, axis=0)  # array of summation of columns
+        total_0_axis = np.nanmean(convert, axis=0)  # array of summation of columns
         trustscore = dict()
         for index, neighbour in enumerate(neighbours):
             trustscore[int(neighbour)] = round(total_0_axis[index], 5)
-
         return trustscore

@@ -30,7 +30,7 @@ class Voter:  # nodes as voters
         vote = np.zeros((len(self.neighbours) + 1, len(self.neighbours) + 1))
         for i in range(len(self.neighbours) + 1):
             if i == 0:
-                vote[0, i] = 0
+                vote[0, i] = np.nan
             else:
                 vote[0, i] = self.neighbours[i - 1]
                 vote[i, 0] = self.neighbours[i - 1]
@@ -42,24 +42,37 @@ class Voter:  # nodes as voters
         for x in range(1, len(self.neighbours) + 1):
             for y in range(1, len(self.neighbours) + 1):
                 if x == y:
-                    pass
+                    v = np.nan
+                    vote[x, y] = v
                 else:
                     # dont loop
                     # look at avg_dict[y]
                     # for node_avg, node_sig in zip(avg_dict, sig_dict):
+                    """
                     if node_trust_value_dict[y] > (avg_dict[y] + sig_dict[y]):
-                        v = node_trust_value_dict[y] + random.uniform(0.1, 0.2)
+                        v = node_trust_value_dict[y] - random.uniform(0.05, 0.1)
+                        # v = node_trust_value_dict[y]
                         if v > 1:
                             v = 1
                     elif (avg_dict[y] - sig_dict[y]) <= node_trust_value_dict[y] <= (avg_dict[y] + sig_dict[y]):
-                        v = node_trust_value_dict[y] + random.uniform(0, 0.1)
+                        v = node_trust_value_dict[y] + random.uniform(0.1, 0.2)
 
                     elif (avg_dict[y] - sig_dict[y]) > node_trust_value_dict[y]:
+                        v = node_trust_value_dict[y] + random.uniform(0.05, 0.1)
+                        # v = node_trust_value_dict[y]
+                        if v < 0:
+                            v = 0
+                    """
+                    if (node_trust_value_dict[y] - avg_dict[y]) >= 0:
+                        v = node_trust_value_dict[y] + random.uniform(0.1, 0.2)
+                    elif (node_trust_value_dict[y] - avg_dict[y]) < 0:
                         v = node_trust_value_dict[y] - random.uniform(0.05, 0.1)
                         if v < 0:
                             v = 0
                     else:
                         v = 9999999
+                    if v > 1:
+                        v = 1
                     vote[x, y] = v
 
         return vote
